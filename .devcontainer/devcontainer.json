@@ -1,0 +1,13 @@
+{
+  "name": "Laravel Workopia",
+  "image": "mcr.microsoft.com/devcontainers/php:8.3",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "22" }
+  },
+  "forwardPorts": [8000, 5173],
+  "portsAttributes": {
+    "8000": { "label": "Laravel", "onAutoForward": "openBrowser" },
+    "5173": { "label": "Vite", "onAutoForward": "notify" }
+  },
+  "postCreateCommand": "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer; composer install && npm install && ([ -f .env ] || cp .env.example .env) && php artisan key:generate --force && touch database/database.sqlite && php artisan migrate --force && npm run build"
+}

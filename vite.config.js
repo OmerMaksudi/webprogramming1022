@@ -3,6 +3,11 @@ import laravel from 'laravel-vite-plugin';
 import { bunny } from 'laravel-vite-plugin/fonts';
 import tailwindcss from '@tailwindcss/vite';
 
+const codespacesViteHost =
+    process.env.CODESPACE_NAME && process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN
+        ? `${process.env.CODESPACE_NAME}-5173.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`
+        : null;
+
 export default defineConfig({
     plugins: [
         laravel({
@@ -17,6 +22,15 @@ export default defineConfig({
         tailwindcss(),
     ],
     server: {
+        host: '0.0.0.0',
+        origin: codespacesViteHost ? `https://${codespacesViteHost}` : 'http://localhost:5173',
+        ...(codespacesViteHost && {
+            hmr: {
+                host: codespacesViteHost,
+                protocol: 'wss',
+                clientPort: 443,
+            },
+        }),
         watch: {
             ignored: ['**/storage/framework/views/**'],
         },
